@@ -36,7 +36,6 @@ impl Game {
         let mut min_round : Round = {Default::default()};
 
         for round in self.rounds.iter() {
-            println!("{} {}", round.blue, min_round.blue);
             if round.red >= min_round.red {
                 min_round.red = round.red;
             }

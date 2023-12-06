@@ -11,12 +11,7 @@ impl Line {
     fn get_nums_from_string(str_in : &str) -> HashSet<u8> {
         str_in.split(" ")
               .into_iter()
-              .filter_map(|num_str| { match num_str.parse::<u8>() { 
-                                               Ok(num) => Some(num), 
-                                               Err(_) => None
-                                            }
-                                          }
-                         )
+              .filter_map(|num_str| num_str.parse::<u8>().ok())
               .collect()
     }
     

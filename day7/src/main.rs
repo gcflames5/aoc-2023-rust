@@ -23,7 +23,7 @@ fn get_card_power(card: char) -> u8 {
         '8' => 8,
         '9' => 9,
         'T' => 10,
-        'J' => 11,
+        'J' => 0,
         'Q' => 12,
         'K' => 13,
         'A' => 14,
@@ -60,8 +60,14 @@ impl Hand {
             *freq_map.entry(*card).or_insert(0) += 1;
         }
 
-        let highest_freq = freq_map.iter().map(|entry| entry.1).max().unwrap();
-        let freq_map_len = freq_map.len();
+        let mut highest_freq = *freq_map.iter().filter(|entry| *entry.0 != 'J').map(|entry| entry.1).max().unwrap_or_else(|| &0);
+
+        // Remove jokers from the map and add their number to the highest_frequency
+        if freq_map.contains_key(&'J') {
+            highest_freq += freq_map.get(&'J').unwrap();
+            freq_map.remove(&'J');
+        }        
+        let freq_map_len: usize = freq_map.len();
 
         match highest_freq {
             5 => return HandType::FiveOfAKind,
@@ -102,7 +108,7 @@ impl Hand {
     }
 }
 
-fn part1() {
+fn main() {
     let file_path = "input_7.txt";
     let contents = fs::read_to_string(file_path).unwrap();
 
@@ -117,9 +123,5 @@ fn part1() {
         .map(|(pos, hand)| (u32::try_from(pos).unwrap() + 1) * hand.bet)
         .sum();
 
-    println!("Part 1 Result: {bet_sum}");
-}
-
-fn main() {
-    part1();
+    println!("Part 2 Result: {bet_sum}");
 }
